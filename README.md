@@ -89,7 +89,7 @@ Set `MONGODB_URI`, `MONGODB_DB`, `PORT`, `WEB_ORIGIN` and `ADMIN_API_TOKEN` befo
 | GET | `/api/bookings/:id` | Retrieve a booking with its access token |
 | PATCH | `/api/bookings/:id/status` | Update status using the operator token |
 
-The detailed request and response contract is in [docs/api.md](docs/api.md).
+The detailed request and response contract is in [docs/api.md](docs/api.md). For a complete booking walkthrough, see [docs/local-testing.md](docs/local-testing.md).
 
 ## CI
 
