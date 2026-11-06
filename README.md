@@ -66,7 +66,7 @@ Requirements: Docker Engine and Docker Compose.
 
 4. Open [http://localhost:8080](http://localhost:8080).
 
-The API health endpoint is available through the web proxy at `/api/health`; readiness is available at `/api/ready`.
+The API exposes `/health` and `/ready` operational endpoints. Nginx forwards these exact paths to the API; `/ready` reports whether MongoDB is connected.
 
 For API development without Compose:
 
@@ -93,7 +93,7 @@ The detailed request and response contract is in [docs/api.md](docs/api.md). For
 
 ## CI
 
-GitHub Actions runs the API tests and syntax checks, builds the React frontend, and builds both Docker images for pushes and pull requests to `main`.
+GitHub Actions validates the Docker Compose configuration, runs API tests and syntax checks, builds the React frontend, and builds both Docker images for pushes and pull requests to `main`. The workflow can also be started manually from the Actions tab.
 
 ## Security notes
 
