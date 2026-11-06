@@ -14,7 +14,7 @@ Homaid lets customers browse service categories and submit a booking request wit
 - Browse the service catalogue and see indicative prices.
 - Submit a booking request with customer details, address and requested time.
 - Retrieve a booking using its reference and private access token.
-- Track the booking through a controlled status lifecycle.
+- Manage booking status through a controlled API lifecycle; status changes use an operator token.
 - Persist service bookings in MongoDB.
 - Run the frontend, API and database together with Docker Compose.
 
@@ -77,7 +77,7 @@ npm test
 npm run check
 ```
 
-Set `MONGODB_URI`, `MONGODB_DB`, `PORT`, `WEB_ORIGIN` and `ADMIN_API_TOKEN` before starting the API.
+Set `MONGODB_URI`, `MONGODB_DB`, `PORT`, `WEB_ORIGIN` and `ADMIN_API_TOKEN` before starting the API directly. Docker Compose keeps the API port fixed at 8081.
 
 ## API overview
 
