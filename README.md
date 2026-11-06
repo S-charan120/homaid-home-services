@@ -1,36 +1,40 @@
-# Homaid — Home Services Platform
+# Homaid — Home Services Booking Platform
 
-A portfolio project for discovering home services and creating service bookings. This repository is a learning scaffold covering a React client, Node.js/Express API, MongoDB persistence, Docker Compose, and an Nginx reverse proxy.
+A full-stack application that connects customers with home-service categories and captures booking requests. The implementation stays within the resume project stack: React, Node.js REST APIs, MongoDB, Docker, and Git.
+
+## Capabilities
+
+- Browse a service catalogue and select a service.
+- Submit a booking with customer contact details, address, and requested time.
+- Retrieve a booking using its booking ID and one-time access token (the API never exposes bookings by email alone).
+- Enforce an explicit booking state machine for provider/admin updates.
+- Persist bookings in MongoDB with indexes and atomic state transitions.
+- Run the web app, API, and database together with Docker Compose.
 
 ## Architecture
 
-- `frontend/` — React application for browsing services and submitting bookings.
-- `backend/` — Express REST API with catalog and booking endpoints.
-- `deploy/` — local Docker Compose and Nginx configuration.
-- `docs/` — architecture, API, runbook, security notes, and roadmap.
+The React SPA talks to the Node.js/Express API through the Nginx reverse proxy. The API validates requests, applies security headers and rate limits, and persists booking records to MongoDB. See docs/architecture.md and docs/api.md.
 
-## Local development
+## Local run
 
-Prerequisites: Docker Desktop / Docker Engine with Compose.
+1. Copy .env.example to .env and replace ADMIN_API_TOKEN with a unique random value.
+2. Run: docker compose up --build
+3. Open http://localhost:8080. The API readiness endpoint is http://localhost:8080/api/ready.
 
-```bash
-docker compose -f deploy/docker-compose.yml up --build
-```
+For local API development without containers, run npm install in api/ and set MONGODB_URI to a reachable MongoDB instance.
 
-Open the frontend at http://localhost:8080. The API health endpoint is available at http://localhost:3000/health.
+## Configuration
 
-## Project status
+The API requires MONGODB_URI and MONGODB_DB. WEB_ORIGIN is an explicit CORS allowlist. ADMIN_API_TOKEN protects operational booking-state changes. Never commit .env files or production secrets.
 
-This is a development scaffold, not a production-ready booking platform. Before production, add authentication and role-based authorization, input validation, rate limiting, payment integration, audit logging, backups, observability, secrets management, and automated tests. Review `docs/security.md` and `docs/roadmap.md`.
+## Validation
 
-## Suggested learning sequence
+Run npm test from api/. The tests cover request validation and allowed/blocked booking transitions. Run npm run check from api/ for syntax validation.
 
-1. Run the application locally and trace a booking request from React to Express and MongoDB.
-2. Add automated unit and API tests.
-3. Build and scan container images.
-4. Deploy to a GKE cluster using a Helm chart.
-5. Add CI/CD promotion, monitoring, and operational runbooks.
+## Security and production checklist
 
-## License
+This is a production-oriented portfolio implementation, not a certified production service. Before public launch, place it behind HTTPS, use a managed MongoDB deployment with private networking and backups, rotate secrets through a secret manager, enable centralized logs/metrics, add customer/provider identity and authorization, add abuse/fraud controls, and conduct load, dependency, and security testing. See docs/security.md.
 
-Educational and portfolio use. Add an explicit license before redistributing this project.
+## Project boundaries
+
+This repository demonstrates the Homaid project described in the resume. It does not claim GCP/GKE deployment, payment processing, identity verification, or a live provider marketplace. Those would be separate, explicitly implemented extensions.
