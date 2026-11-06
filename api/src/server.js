@@ -6,6 +6,7 @@ const { MongoClient } = require('mongodb');
 const { services, validateBooking, canTransition } = require('./domain');
 
 const app = express();
+app.set('trust proxy', 1); // API is reachable only through the trusted Nginx reverse proxy.
 const port = Number(process.env.PORT || 8081);
 const adminToken = process.env.ADMIN_API_TOKEN;
 let client;
