@@ -16,13 +16,13 @@ The Nginx web container forwards these exact paths to the corresponding API endp
 
 ## Bookings
 
-- POST /api/bookings — create a request. Required fields: serviceId, customerName, customerEmail, address, scheduledAt. Optional: notes. scheduledAt must be at least one hour in the future. Optional Idempotency-Key prevents duplicate submissions (unique key).
+- POST /api/bookings — create a request. Required fields: serviceId, customerName, customerEmail, address, scheduledAt. Optional: notes. scheduledAt must be at least one hour in the future. Optional Idempotency-Key is protected by a unique index; reusing a key returns 409 rather than creating another booking.
 - GET /api/bookings/:id — retrieve a booking. Requires X-Booking-Token from creation. A booking ID alone is not sufficient.
 - PATCH /api/bookings/:id/status — operator-only state transition. Requires X-Admin-Token. Valid states: requested → confirmed → in_progress → completed; requested/confirmed may also transition to cancelled. Terminal states cannot be reopened.
 
 ## Status and error codes
 
-201 created; 200 success; 204 preflight; 400 validation/JSON error; 401 missing/invalid access token; 404 unknown or inaccessible booking; 409 invalid/concurrent transition or duplicate idempotency key; 429 rate limit; 503 database unavailable; 500 unexpected server error.
+201 created; 200 success; 204 preflight; 400 validation/JSON error; 401 missing/invalid X-Admin-Token on operator updates; 404 unknown or inaccessible booking (including a wrong booking token); 409 invalid/concurrent transition or duplicate idempotency key; 429 rate limit; 503 database unavailable; 500 unexpected server error.
 
 ## Example booking body
 
