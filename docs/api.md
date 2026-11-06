@@ -1,6 +1,13 @@
 # REST API contract
 
-All API routes are under /api. JSON request bodies are limited to 32 KB.
+Application routes are under `/api`. The API also exposes operational `/health` and `/ready` endpoints outside that prefix. JSON request bodies are limited to 32 KB.
+
+## Health and readiness
+
+- GET /health — process liveness.
+- GET /ready — readiness; returns 503 until MongoDB is connected.
+
+The Nginx web container forwards these exact paths to the corresponding API endpoints.
 
 ## Catalogue
 
