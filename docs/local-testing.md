@@ -16,9 +16,11 @@ docker compose ps
 Open http://localhost:8080. Check the API through the web proxy:
 
 ```bash
-curl -i http://localhost:8080/api/health
-curl -i http://localhost:8080/api/ready
+curl -i http://localhost:8080/health
+curl -i http://localhost:8080/ready
 ```
+
+These exact Nginx paths proxy to the API's /health and /ready routes. The readiness endpoint returns 503 until MongoDB is connected.
 
 ## 2. Check the service catalogue
 
@@ -39,12 +41,12 @@ curl -i -X POST http://localhost:8080/api/bookings \
   -H 'Content-Type: application/json' \
   -H "Idempotency-Key: $(node -e 'console.log(require("crypto").randomUUID())')" \
   -d "{
-    \"serviceId\": \"cleaning\",
-    \"customerName\": \"Demo Customer\",
-    \"customerEmail\": \"demo@example.com\",
-    \"address\": \"12 Example Street, Hyderabad\",
-    \"scheduledAt\": \"$SCHEDULED_AT\",
-    \"notes\": \"Please call before arriving\"
+    \\"serviceId\\": \\"cleaning\\",
+    \\"customerName\\": \\"Demo Customer\\",
+    \\"customerEmail\\": \\"demo@example.com\\",
+    \\"address\\": \\"12 Example Street, Hyderabad\\",
+    \\"scheduledAt\\": \\"$SCHEDULED_AT\\",
+    \\"notes\\": \\"Please call before arriving\\"
   }"
 ```
 
