@@ -1,40 +1,106 @@
-# Homaid — Home Services Booking Platform
+# Homaid
 
-A full-stack application that connects customers with home-service categories and captures booking requests. The implementation stays within the resume project stack: React, Node.js REST APIs, MongoDB, Docker, and Git.
+![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=black)
+![Node.js](https://img.shields.io/badge/Node.js-22-339933?logo=nodedotjs&logoColor=white)
+![MongoDB](https://img.shields.io/badge/MongoDB-7-47A248?logo=mongodb&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-Compose-2496ED?logo=docker&logoColor=white)
 
-## Capabilities
+> A home-services booking application built with React, Node.js, MongoDB and Docker.
 
-- Browse a service catalogue and select a service.
-- Submit a booking with customer contact details, address, and requested time.
-- Retrieve a booking using its booking ID and one-time access token (the API never exposes bookings by email alone).
-- Enforce an explicit booking state machine for provider/admin updates.
-- Persist bookings in MongoDB with indexes and atomic state transitions.
-- Run the web app, API, and database together with Docker Compose.
+Homaid lets customers browse service categories and submit a booking request with a preferred time and service address. It is the application project in my portfolio; the infrastructure scope is intentionally limited to the technologies listed in the project stack.
+
+## Features
+
+- Browse the service catalogue and see indicative prices.
+- Submit a booking request with customer details, address and requested time.
+- Retrieve a booking using its reference and private access token.
+- Track the booking through a controlled status lifecycle.
+- Persist service bookings in MongoDB.
+- Run the frontend, API and database together with Docker Compose.
 
 ## Architecture
 
-The React SPA talks to the Node.js/Express API through the Nginx reverse proxy. The API validates requests, applies security headers and rate limits, and persists booking records to MongoDB. See docs/architecture.md and docs/api.md.
+```mermaid
+flowchart LR
+    Browser[Customer browser] -->|HTTP| Web[React app / Nginx]
+    Web -->|REST API| API[Node.js / Express]
+    API --> DB[(MongoDB)]
+    API -->|Booking reference + access token| Browser
+```
 
-## Local run
+The browser loads the React app from Nginx. Nginx forwards `/api` requests to the Express service. The API validates incoming booking data and stores the booking in MongoDB. A booking token is returned once at creation; only its hash is stored by the API.
 
-1. Copy .env.example to .env and replace ADMIN_API_TOKEN with a unique random value.
-2. Run: docker compose up --build
-3. Open http://localhost:8080. The API readiness endpoint is http://localhost:8080/api/ready.
+## Repository layout
 
-For local API development without containers, run npm install in api/ and set MONGODB_URI to a reachable MongoDB instance.
+```text
+.
+├── api/
+│   ├── src/
+│   │   ├── domain.js
+│   │   └── server.js
+│   ├── test/
+│   └── Dockerfile
+├── web/
+│   ├── src/
+│   └── Dockerfile
+├── docs/
+│   ├── architecture.md
+│   ├── api.md
+│   ├── security.md
+│   └── runbook.md
+├── .github/workflows/ci.yml
+└── docker-compose.yml
+```
 
-## Configuration
+## Run locally
 
-The API requires MONGODB_URI and MONGODB_DB. WEB_ORIGIN is an explicit CORS allowlist. ADMIN_API_TOKEN protects operational booking-state changes. Never commit .env files or production secrets.
+Requirements: Docker Engine and Docker Compose.
 
-## Validation
+1. Copy `.env.example` to `.env`.
+2. Set `ADMIN_API_TOKEN` to a long, unique random value.
+3. Start the stack:
 
-Run npm test from api/. The tests cover request validation and allowed/blocked booking transitions. Run npm run check from api/ for syntax validation.
+   ```bash
+   docker compose up --build
+   ```
 
-## Security and production checklist
+4. Open [http://localhost:8080](http://localhost:8080).
 
-This is a production-oriented portfolio implementation, not a certified production service. Before public launch, place it behind HTTPS, use a managed MongoDB deployment with private networking and backups, rotate secrets through a secret manager, enable centralized logs/metrics, add customer/provider identity and authorization, add abuse/fraud controls, and conduct load, dependency, and security testing. See docs/security.md.
+The API health endpoint is available through the web proxy at `/api/health`; readiness is available at `/api/ready`.
 
-## Project boundaries
+For API development without Compose:
 
-This repository demonstrates the Homaid project described in the resume. It does not claim GCP/GKE deployment, payment processing, identity verification, or a live provider marketplace. Those would be separate, explicitly implemented extensions.
+```bash
+cd api
+npm install
+npm test
+npm run check
+```
+
+Set `MONGODB_URI`, `MONGODB_DB`, `PORT`, `WEB_ORIGIN` and `ADMIN_API_TOKEN` before starting the API.
+
+## API overview
+
+| Method | Route | Purpose |
+|---|---|---|
+| GET | `/api/services` | List service categories |
+| GET | `/api/services/:id` | Get one service |
+| POST | `/api/bookings` | Create a booking request |
+| GET | `/api/bookings/:id` | Retrieve a booking with its access token |
+| PATCH | `/api/bookings/:id/status` | Update status using the operator token |
+
+The detailed request and response contract is in [docs/api.md](docs/api.md).
+
+## CI
+
+GitHub Actions runs the API tests and syntax checks, builds the React frontend, and builds both Docker images for pushes and pull requests to `main`.
+
+## Security notes
+
+The API applies request validation, security headers, an explicit CORS allowlist and rate limiting. Booking lookup requires the private token returned at creation. The static operator token is a small-project mechanism, not a substitute for a provider/admin identity system.
+
+Before using this as a public service, add customer and provider authentication, role-based authorization, managed MongoDB with private networking and backups, HTTPS, central logging/metrics, dependency and image scanning, and load/security testing. See [docs/security.md](docs/security.md).
+
+## Project scope
+
+This repository covers the Homaid project described in my resume: React.js, Node.js REST APIs, MongoDB, Docker and Git. It does not claim a deployed cloud environment, integrated payments, verified providers or a live marketplace.
