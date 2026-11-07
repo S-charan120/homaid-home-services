@@ -34,21 +34,26 @@ The browser loads the React app from Nginx. Nginx forwards `/api` requests to th
 
 ```text
 .
-├── api/
-│   ├── src/
-│   │   ├── domain.js
-│   │   └── server.js
-│   ├── test/
-│   └── Dockerfile
-├── web/
-│   ├── src/
-│   └── Dockerfile
-├── docs/
-│   ├── architecture.md
-│   ├── api.md
-│   ├── security.md
-│   └── runbook.md
 ├── .github/workflows/ci.yml
+├── .env.example
+├── api/
+│   ├── src/                 # API domain and HTTP server
+│   ├── test/                # API/domain tests
+│   ├── Dockerfile
+│   └── package.json
+├── web/
+│   ├── src/                 # React app and components
+│   ├── Dockerfile
+│   ├── nginx.conf
+│   └── package.json
+├── docs/
+│   ├── api.md
+│   ├── architecture.md
+│   ├── local-testing.md
+│   ├── roadmap.md
+│   ├── runbook.md
+│   └── security.md
+├── scripts/check-markdown-links.py
 └── docker-compose.yml
 ```
 
