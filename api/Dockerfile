@@ -1,5 +1,5 @@
 FROM node:22-alpine AS deps
-# Dependency lockfile is not committed; npm install resolves package ranges at image build time.
+# npm install resolves package ranges at image build time.
 WORKDIR /app
 COPY package.json ./
 RUN npm install --omit=dev --no-audit --no-fund
