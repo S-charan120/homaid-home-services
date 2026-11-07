@@ -40,7 +40,8 @@ The browser loads the React app from Nginx. Nginx forwards `/api` requests to th
 │   ├── src/                 # API domain and HTTP server
 │   ├── test/                # API/domain tests
 │   ├── Dockerfile
-│   └── package.json
+│   ├── package.json
+│   └── package-lock.json
 ├── web/
 │   ├── src/                 # React app and components
 │   ├── Dockerfile
@@ -77,7 +78,7 @@ For API development without Compose:
 
 ```bash
 cd api
-npm install
+npm ci
 npm test
 npm run check
 ```
@@ -98,7 +99,7 @@ The detailed request and response contract is in [docs/api.md](docs/api.md). For
 
 ## CI
 
-GitHub Actions validates the Docker Compose configuration, runs API tests and syntax checks, builds the React frontend, and builds both Docker images for pushes and pull requests to `main`. The workflow can also be started manually from the Actions tab.
+GitHub Actions installs API and frontend dependencies from the committed npm lockfiles with `npm ci`, validates the Docker Compose configuration, runs API tests and syntax checks, builds the React frontend, and builds both Docker images for pushes and pull requests to `main`. The workflow can also be started manually from the Actions tab.
 
 ## Security notes
 

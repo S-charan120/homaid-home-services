@@ -26,20 +26,25 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "22"
+          cache: npm
+          cache-dependency-path: |
+            api/package-lock.json
+            web/package-lock.json
 
       - name: Validate local Markdown links
         run: python3 scripts/check-markdown-links.py
+
       - name: Test and check API
         working-directory: api
         run: |
-          npm install --no-audit --no-fund
+          npm ci --no-audit --no-fund
           npm test
           npm run check
 
       - name: Build React frontend
         working-directory: web
         run: |
-          npm install --no-audit --no-fund
+          npm ci --no-audit --no-fund
           npm run build
 
       - name: Build API container
