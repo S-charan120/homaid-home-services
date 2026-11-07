@@ -88,11 +88,11 @@ A transition outside this lifecycle returns 409. The update uses the current sta
 
 ```bash
 cd api
-npm ci
+npm install
 npm test
 npm run check
 cd ../web
-npm ci
+npm install
 npm run build
 ```
 
