@@ -46,7 +46,8 @@ The browser loads the React app from Nginx. Nginx forwards `/api` requests to th
 │   ├── src/                 # React app and components
 │   ├── Dockerfile
 │   ├── nginx.conf
-│   └── package.json
+│   ├── package.json
+│   └── package-lock.json
 ├── docs/
 │   ├── api.md
 │   ├── architecture.md
