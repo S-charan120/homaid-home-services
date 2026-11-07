@@ -21,3 +21,9 @@ test('booking lifecycle permits only defined forward transitions', () => {
   assert.equal(canTransition('completed', 'requested'), false);
   assert.equal(canTransition('cancelled', 'confirmed'), false);
 });
+
+test('booking validation measures trimmed customer name and address lengths', () => {
+  const input = { serviceId: 'cleaning', customerName: '  A Customer  ', customerEmail: 'a@example.com', address: '  12 Example Street  ', scheduledAt: new Date(Date.now() + 86_400_000).toISOString() };
+  assert.deepEqual(validateBooking(input), []);
+  assert.ok(validateBooking({ ...input, customerName: ' '.repeat(101) + 'A' }).includes('customerName must be 2-100 characters'));
+});
