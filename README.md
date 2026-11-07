@@ -106,7 +106,7 @@ GitHub Actions installs API and frontend dependencies from the committed npm loc
 
 The API applies request validation, security headers, an explicit CORS allowlist and rate limiting. Booking lookup requires the private token returned at creation. The static operator token is a small-project mechanism, not a substitute for a provider/admin identity system.
 
-Before using this as a public service, add customer and provider authentication, role-based authorization, managed MongoDB with private networking and backups, HTTPS, central logging/metrics, dependency and image scanning, and load/security testing. See [docs/security.md](docs/security.md).
+Before any public deployment, HTTPS is mandatory (terminate TLS at a trusted reverse proxy/load balancer and redirect HTTP to HTTPS); never expose the app over plain HTTP. Also add customer and provider authentication, role-based authorization, managed MongoDB with private networking and backups, central logging/metrics, dependency and image scanning, and load/security testing. See [docs/security.md](docs/security.md).
 
 ## Project scope
 
