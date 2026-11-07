@@ -1,4 +1,5 @@
 FROM node:22-alpine AS deps
+# No lockfile is committed for this small API; npm install resolves package ranges at image build time.
 WORKDIR /app
 COPY package.json ./
 RUN npm install --omit=dev --no-audit --no-fund
